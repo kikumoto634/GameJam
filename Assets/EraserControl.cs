@@ -5,11 +5,16 @@ public class EraserControl : MonoBehaviour
 {
     [SerializeField] private float ForcePower = 10f;
     private float _power;
-    public bool IsChange = false;
+    private bool IsChange = false;
 
-    public Rigidbody _rb = null;
+    [SerializeField] private Rigidbody _rb = null;
 
-    public Slider _slider = null;
+    [SerializeField] private Slider _slider = null;
+
+    public bool IsClick = false;
+
+    public GameObject _computer = null;
+    ComMove comMove = null;
 
 
     private void Start()
@@ -17,20 +22,24 @@ public class EraserControl : MonoBehaviour
         _power = 0;
         IsChange = false;
         _slider.value = 0;
+
+        comMove = _computer.GetComponent<ComMove>();
     }
 
     private void Update()
     {
         if (Input.GetMouseButton(0))
         {
+            IsClick = true;
+
             if(!IsChange && _power < ForcePower)
             {
-                _power += 0.1f;
+                _power += 0.2f;
                 if(_power >= ForcePower) IsChange = true;
             }
             else if(IsChange && _power > 0.0f)
             {
-                _power -= 0.1f;
+                _power -= 0.2f;
                 if(_power <= 0.0f) IsChange = false;
             }
         }
@@ -43,11 +52,21 @@ public class EraserControl : MonoBehaviour
             _rb.AddTorque(Vector3.up * Mathf.PI * (_power*10), ForceMode.Force);
             _power = 0;
             IsChange = false;
+            comMove.ComTurn();
             Debug.Log("”­ŽË");
         }
 
-        Debug.Log(_power);
+        //’âŽ~‚ÅIsClick‚ðfalse
+        if (_rb.IsSleeping())
+        {
+            IsClick = false;
+
+            Debug.Log("IsClick:"+IsClick);
+        }
+
+
+        //Debug.Log(_power);
         //0.1‚Å‘¬“x§ŒÀ
-        _slider.value = _power * 0.1f;
+        _slider.value = _power * 0.05f;
     }
 }
