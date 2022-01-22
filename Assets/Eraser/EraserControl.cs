@@ -27,6 +27,8 @@ public class EraserControl : MonoBehaviour
     public GameObject _computer = null;
     ComMove comMove = null;
 
+    public GameManager _gameManager = null;
+
 
     private void Awake()
     {
@@ -101,6 +103,12 @@ public class EraserControl : MonoBehaviour
             Debug.Log("playerŽ€–S");
             Life -= 1;
             this.transform.position = InitialPos;
+        }
+
+        if(Life <= 0)
+        {
+            _gameManager._player.RemoveAt(0);
+            //Destroy(this.gameObject);
         }
     }
 }

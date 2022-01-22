@@ -19,6 +19,8 @@ public class ComMove : MonoBehaviour
  
     bool IsShot = false;
 
+    public GameManager _gameManager = null;
+
 
     private void Awake()
     {
@@ -49,6 +51,12 @@ public class ComMove : MonoBehaviour
             Debug.Log("enemyŽ€–S");
             Life -= 1;
             this.transform.position = InitialPos;
+        }
+
+        if(Life <= 0)
+        {
+            _gameManager._enemys.RemoveAt(0);
+            //Destroy(this.gameObject);
         }
     }
 

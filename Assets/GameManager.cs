@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    List<ComMove> _enemys = null;
-    List<EraserControl> _player = null;
+    public List<ComMove> _enemys = null;
+    public List<EraserControl> _player = null;
 
 
 
@@ -26,11 +27,14 @@ public class GameManager : MonoBehaviour
         if(_enemys.Count == 0)
         {
             Debug.Log("クリア");
+            SceneManager.LoadScene("Title");
         }
 
         if(_player.Count == 0)
         {
+            
             Debug.Log("オーバー");
+            SceneManager.LoadScene("Title");
         }
     }
 }

@@ -663,6 +663,7 @@ MonoBehaviour:
   _rb: {fileID: 555970887}
   _target: {fileID: 2042164723}
   InitialPos: {x: 0, y: 0, z: 2}
+  _gameManager: {fileID: 2030112175}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,6 +1353,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 434a088f2844301448081912de01706b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemys: []
+  _player: []
 --- !u!4 &2030112176
 Transform:
   m_ObjectHideFlags: 0
@@ -1475,13 +1478,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399585ab320283c48bd80141690dc883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Life: 3
+  Life: 1
   IsShot: 1
   ForcePower: 20
   InitialPos: {x: 0, y: 0, z: -10}
   _rb: {fileID: 2042164729}
   _slider: {fileID: 530926749}
   _computer: {fileID: 555970886}
+  _gameManager: {fileID: 2030112175}
 --- !u!54 &2042164729
 Rigidbody:
   m_ObjectHideFlags: 0
