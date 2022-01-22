@@ -4,20 +4,34 @@ using UnityEngine.UI;
 
 public class EraserControl : MonoBehaviour
 {
+    [Header("残機")]
+    public int Life = 3;
 
+    [Header("打つ")]
     public bool IsShot = true;
 
+    [Header("パワー")]
     [SerializeField] private float ForcePower = 10f;
     private float _power;
     private bool IsChange = false;
+
+    [Header("初期位置")]
+    [SerializeField] private Vector3 InitialPos = default;
 
     [SerializeField] private Rigidbody _rb = null;
 
     [SerializeField] private Slider _slider = null;
 
+    private float DeadArea = -30f;
+
     public GameObject _computer = null;
     ComMove comMove = null;
 
+
+    private void Awake()
+    {
+        this.transform.position = InitialPos;
+    }
 
     private void Start()
     {
@@ -48,6 +62,11 @@ public class EraserControl : MonoBehaviour
         _slider.value = _power * 0.05f;
     }
 
+    private void LateUpdate()
+    {
+        Dead();
+    }
+
     void Shot()
     {
         if (Input.GetMouseButton(0))
@@ -72,6 +91,16 @@ public class EraserControl : MonoBehaviour
             _rb.AddTorque(Vector3.up * Mathf.PI * (_power*10), ForceMode.Force);
             IsShot = false;
             Debug.Log("発射");
+        }
+    }
+
+    void Dead()
+    {
+        if(transform.position.y <= DeadArea)
+        {
+            Debug.Log("player死亡");
+            Life -= 1;
+            this.transform.position = InitialPos;
         }
     }
 }
