@@ -24,6 +24,7 @@ public class EraserControl : MonoBehaviour
 
     private float DeadArea = -30f;
 
+    [Header("コンポーネント")]
     public GameObject _computer = null;
     ComMove comMove = null;
 
@@ -33,6 +34,7 @@ public class EraserControl : MonoBehaviour
     private void Awake()
     {
         this.transform.position = InitialPos;
+        _gameManager._player.Add(this.gameObject.name);
     }
 
     private void Start()
@@ -46,7 +48,7 @@ public class EraserControl : MonoBehaviour
 
     private void Update()
     {
-        if(IsShot)Shot();
+        if(IsShot && _gameManager.IsPlayerTurn)Shot();
 
         //停止でIsClickをfalse
         if (_rb.IsSleeping() && !IsShot)
@@ -54,12 +56,13 @@ public class EraserControl : MonoBehaviour
             IsShot = true;
             _power = 0.0f;
             _slider.value = 0;
-            comMove.ComTurn();
-            Debug.Log("player再設定");
+
+            _gameManager.IsPlayerTurn = false;
+            _gameManager.IsEnemyTurn = true;
+            //Debug.Log("player再設定");
         }
 
 
-        //Debug.Log(_power);
         //0.1で速度制限
         _slider.value = _power * 0.05f;
     }
@@ -92,7 +95,7 @@ public class EraserControl : MonoBehaviour
             _rb.AddForce(cameraForward * (_power*10), ForceMode.Impulse);
             _rb.AddTorque(Vector3.up * Mathf.PI * (_power*10), ForceMode.Force);
             IsShot = false;
-            Debug.Log("発射");
+            //Debug.Log("発射");
         }
     }
 
@@ -100,15 +103,16 @@ public class EraserControl : MonoBehaviour
     {
         if(transform.position.y <= DeadArea)
         {
-            Debug.Log("player死亡");
+            //Debug.Log("player死亡");
             Life -= 1;
-            this.transform.position = InitialPos;
-        }
+            
+            if(Life <= 0)
+            {
+                _gameManager._player.Remove(this.gameObject.name);
+                this.gameObject.SetActive(false);
+            }
 
-        if(Life <= 0)
-        {
-            _gameManager._player.RemoveAt(0);
-            //Destroy(this.gameObject);
+            this.transform.position = InitialPos;
         }
     }
 }

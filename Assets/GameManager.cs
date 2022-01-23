@@ -6,35 +6,65 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public List<ComMove> _enemys = null;
-    public List<EraserControl> _player = null;
+    public List<string> _enemys = null;
+    public List<string> _player = null;
 
+    public int enemy_i = 0;
+
+    [Header("各ターン")]
+    public bool IsPlayerTurn = true;
+    public bool IsEnemyTurn = false;
 
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
 
-        _enemys = GameObject.FindObjectsOfType<ComMove>().ToList();
-        _player = GameObject.FindObjectsOfType<EraserControl>().ToList();
     }
 
     private void Update()
     {
-        Debug.Log("敵の数"+_enemys.Count);
-        Debug.Log("プレイヤーの数"+_player.Count);
+        //Debug.Log("敵の数"+_enemys.Count);
+        //Debug.Log("プレイヤーの数"+_player.Count);
 
-        if(_enemys.Count == 0)
+        Turn();
+
+
+        if(_enemys == null)
         {
             Debug.Log("クリア");
-            SceneManager.LoadScene("Title");
+            //SceneManager.LoadScene("Title");
         }
 
-        if(_player.Count == 0)
-        {
-            
+        if(_player == null)
+        {   
             Debug.Log("オーバー");
-            SceneManager.LoadScene("Title");
+            //SceneManager.LoadScene("Title");
+        }
+    }
+
+    void Turn()
+    {
+        //falseでplayer->enemyのturnになる
+        if (!IsPlayerTurn && IsEnemyTurn)
+        {
+            Debug.Log("enemyTurn");
+
+            if(_enemys.Count > enemy_i)
+            {
+                IsEnemyTurn = true;
+            }
+            else if(_enemys.Count <= enemy_i)
+            {
+                Debug.Log("すべての敵の攻撃終了");
+                IsEnemyTurn = false;
+                enemy_i = 0;
+                IsPlayerTurn = true;
+            }
+        }
+        else if (IsPlayerTurn && !IsEnemyTurn)
+        {
+            Debug.Log("playerTurn");
         }
     }
 }

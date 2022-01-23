@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using System.Linq;
 public class ComMove : MonoBehaviour
 {
     [Header("écã@")]
@@ -17,7 +17,8 @@ public class ComMove : MonoBehaviour
 
     private float DeadArea = -30f;
  
-    bool IsShot = false;
+    bool IsShot = true;
+    bool IsDown = false;
 
     public GameManager _gameManager = null;
 
@@ -25,17 +26,29 @@ public class ComMove : MonoBehaviour
     private void Awake()
     {
         this.transform.position = InitialPos;
+        _gameManager._enemys.Add(this.gameObject.name);
     }
 
     private void Update()
     {
-        if (IsShot && _rb.IsSleeping())
+        //Debug.Log("enemy:"+_gameManager._enemys.IndexOf(this.gameObject.name));
+        //Debug.Log("enemy_i:"+_gameManager.enemy_i);
+        if (_gameManager._enemys.IndexOf(this.gameObject.name) == _gameManager.enemy_i && _gameManager.IsEnemyTurn && IsShot)
         {
+            Debug.Log("enemy"+_gameManager.enemy_i+":çUåÇ");
             transform.LookAt(_target.transform);
             _rb.AddForce(transform.forward * (_power*10), ForceMode.Impulse);
             _rb.AddTorque(Vector3.up * Mathf.PI * (_power*10), ForceMode.Force);
             IsShot = false;
-            Debug.Log("ìGî≠éÀ");
+        }
+
+        //í‚é~ÅAÉ^Å[Éìà⁄ìÆ
+        if ((!IsShot && _rb.IsSleeping()) || IsDown)
+        {
+            IsDown = false;
+            //Debug.Log("enemy:"+_gameManager.enemy_i+"í‚é~");
+            _gameManager.enemy_i = _gameManager.enemy_i + 1;
+            IsShot = true;
         }
     }
 
@@ -48,26 +61,17 @@ public class ComMove : MonoBehaviour
     {
         if(transform.position.y <= DeadArea)
         {
-            Debug.Log("enemyéÄñS");
+            //Debug.Log("enemyéÄñS");
             Life -= 1;
+            IsDown = true;
+
+            if(Life <= 0)
+            {
+                _gameManager._enemys.Remove(this.gameObject.name);
+                this.gameObject.SetActive(false);
+            }
+
             this.transform.position = InitialPos;
         }
-
-        if(Life <= 0)
-        {
-            _gameManager._enemys.RemoveAt(0);
-            //Destroy(this.gameObject);
-        }
-    }
-
-    public void ComTurn()
-    {
-        StartCoroutine("ComForward");
-    }
- 
-    IEnumerator ComForward()
-    {
-        yield return new WaitForSeconds(1.0f);
-        IsShot = true;
     }
 }
