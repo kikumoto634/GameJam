@@ -25,15 +25,19 @@ public class EraserControl : MonoBehaviour
     private float DeadArea = -30f;
 
     [Header("コンポーネント")]
-    public GameObject _computer = null;
-    ComMove comMove = null;
 
     public GameManager _gameManager = null;
 
+    public PlayerLifeControl _playerLifeConrol = null;
+
+
+    //キャッシュ
+    Transform _thisTransPos = default;
 
     private void Awake()
     {
-        this.transform.position = InitialPos;
+        _thisTransPos = this.gameObject.transform;
+        this.gameObject.transform.position = InitialPos;
         _gameManager._player.Add(this.gameObject.name);
     }
 
@@ -43,7 +47,7 @@ public class EraserControl : MonoBehaviour
         IsChange = false;
         _slider.value = 0;
 
-        comMove = _computer.GetComponent<ComMove>();
+        _playerLifeConrol.SetLifeGauge(Life);
     }
 
     private void Update()
@@ -86,6 +90,10 @@ public class EraserControl : MonoBehaviour
                 _power -= 0.2f;
                 if(_power <= 0.0f) IsChange = false;
             }
+            else
+            {
+                _power = 0.1f;
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -105,6 +113,7 @@ public class EraserControl : MonoBehaviour
         {
             //Debug.Log("player死亡");
             Life -= 1;
+            _playerLifeConrol.SetLifeGauge2(1);
             
             if(Life <= 0)
             {
@@ -112,7 +121,7 @@ public class EraserControl : MonoBehaviour
                 this.gameObject.SetActive(false);
             }
 
-            this.transform.position = InitialPos;
+            _thisTransPos.position = InitialPos;
         }
     }
 }

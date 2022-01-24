@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-
     }
 
     private void Update()
@@ -28,7 +27,6 @@ public class GameManager : MonoBehaviour
         //Debug.Log("ƒvƒŒƒCƒ„[‚Ì”"+_player.Count);
 
         Turn();
-
 
         if(_enemys == null)
         {

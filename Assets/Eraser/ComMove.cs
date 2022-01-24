@@ -22,10 +22,13 @@ public class ComMove : MonoBehaviour
 
     public GameManager _gameManager = null;
 
+    //ƒLƒƒƒbƒVƒ…
+    Transform _thisTransPos = default;
 
     private void Awake()
     {
-        this.transform.position = InitialPos;
+        _thisTransPos = this.gameObject.transform;
+        this.gameObject.transform.position = InitialPos;
         _gameManager._enemys.Add(this.gameObject.name);
     }
 
@@ -71,7 +74,7 @@ public class ComMove : MonoBehaviour
                 this.gameObject.SetActive(false);
             }
 
-            this.transform.position = InitialPos;
+            _thisTransPos.position = InitialPos;
         }
     }
 }
