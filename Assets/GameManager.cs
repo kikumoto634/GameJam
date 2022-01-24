@@ -48,11 +48,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("enemyTurn");
 
-            if(_enemys.Count > enemy_i)
+            if(_enemys.Count >= enemy_i+1)
             {
                 IsEnemyTurn = true;
             }
-            else if(_enemys.Count <= enemy_i)
+            else if(_enemys.Count < enemy_i+1)
             {
                 Debug.Log("‚·‚×‚Ä‚Ì“G‚ÌUŒ‚I—¹");
                 IsEnemyTurn = false;

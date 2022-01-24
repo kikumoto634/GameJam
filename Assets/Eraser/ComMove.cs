@@ -46,12 +46,9 @@ public class ComMove : MonoBehaviour
         }
 
         //í‚é~ÅAÉ^Å[Éìà⁄ìÆ
-        if ((!IsShot && _rb.IsSleeping()) || IsDown)
+        if (!IsShot && _rb.IsSleeping())
         {
-            IsDown = false;
-            //Debug.Log("enemy:"+_gameManager.enemy_i+"í‚é~");
-            _gameManager.enemy_i = _gameManager.enemy_i + 1;
-            IsShot = true;
+            StartCoroutine("Pause");
         }
     }
 
@@ -66,7 +63,7 @@ public class ComMove : MonoBehaviour
         {
             //Debug.Log("enemyéÄñS");
             Life -= 1;
-            IsDown = true;
+            //IsDown = true;
 
             if(Life <= 0)
             {
@@ -76,5 +73,17 @@ public class ComMove : MonoBehaviour
 
             _thisTransPos.position = InitialPos;
         }
+    }
+
+    IEnumerator Pause()
+    {
+        //Debug.Log("0.5ïbë“ã@");
+        //éwíËïbë“ã@Ç∑ÇÈ
+        yield return new WaitForSeconds(0.5f);
+
+        //IsDown = false;
+        //Debug.Log("enemy:"+_gameManager.enemy_i+"í‚é~");
+        _gameManager.enemy_i = _gameManager.enemy_i + 1;
+        IsShot = true;
     }
 }

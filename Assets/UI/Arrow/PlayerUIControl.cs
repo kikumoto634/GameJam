@@ -9,8 +9,8 @@ public class PlayerUIControl : MonoBehaviour
 
     private void Awake()
     {
-        Arrow1.SetActive(true);
-        Arrow2.SetActive(true);
+        //Arrow1.SetActive(true);
+        //Arrow2.SetActive(true);
     }
 
     private void LateUpdate()

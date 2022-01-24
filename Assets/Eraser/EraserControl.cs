@@ -55,15 +55,9 @@ public class EraserControl : MonoBehaviour
         if(IsShot && _gameManager.IsPlayerTurn)Shot();
 
         //í‚é~Ç≈IsClickÇfalse
-        if (_rb.IsSleeping() && !IsShot)
+        if (_rb.IsSleeping() && !IsShot && _gameManager.IsPlayerTurn)
         {
-            IsShot = true;
-            _power = 0.0f;
-            _slider.value = 0;
-
-            _gameManager.IsPlayerTurn = false;
-            _gameManager.IsEnemyTurn = true;
-            //Debug.Log("playerçƒê›íË");
+            StartCoroutine("Pause");
         }
 
 
@@ -123,5 +117,19 @@ public class EraserControl : MonoBehaviour
 
             _thisTransPos.position = InitialPos;
         }
+    }
+
+    IEnumerator Pause()
+    {
+        //Debug.Log("1ïbë“ã@");
+        //éwíËïbë“ã@Ç∑ÇÈ
+        yield return new WaitForSeconds(1);
+
+        IsShot = true;
+        _gameManager.IsEnemyTurn = true;
+        _power = 0.0f;
+        _slider.value = 0;
+        _gameManager.IsPlayerTurn = false;
+        Debug.Log("playerçƒê›íË");
     }
 }
