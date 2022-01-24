@@ -6,12 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("各キャラの数、name(自動)")]
     public List<string> _enemys = null;
     public List<string> _player = null;
 
+    [Header("敵のターン番号(自動)")]
     public int enemy_i = 0;
 
-    [Header("各ターン")]
+    [Header("各ターン(自動)")]
     public bool IsPlayerTurn = true;
     public bool IsEnemyTurn = false;
 

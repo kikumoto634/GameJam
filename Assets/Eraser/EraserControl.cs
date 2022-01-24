@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 
-public class EraserControl : MonoBehaviour
+public class EraserControl : MonoBehaviour, IPause
 {
     [Header("残機")]
     public int Life = 3;
@@ -18,18 +18,21 @@ public class EraserControl : MonoBehaviour
     [Header("初期位置")]
     [SerializeField] private Vector3 InitialPos = default;
 
-    [SerializeField] private Rigidbody _rb = null;
-
-    [SerializeField] private Slider _slider = null;
-
+    [Header("死亡位置")]
     private float DeadArea = -30f;
 
     [Header("コンポーネント")]
+    [SerializeField] private Rigidbody _rb = null;
+    [SerializeField] private Slider _slider = null;
 
-    public GameManager _gameManager = null;
+    [SerializeField]private GameManager _gameManager = null;
+    [SerializeField]private PlayerLifeControl _playerLifeConrol = null;
 
-    public PlayerLifeControl _playerLifeConrol = null;
 
+    //ポーズの設定
+    Vector3 AngularVelocity = default;
+    Vector3 MyVelocity = default;
+    bool IsPause = false;
 
     //キャッシュ
     Transform _thisTransPos = default;
@@ -41,6 +44,9 @@ public class EraserControl : MonoBehaviour
         _gameManager._player.Add(this.gameObject.name);
     }
 
+    /// <summary>
+    /// 開始初期化
+    /// </summary>
     private void Start()
     {
         _power = 0;
@@ -50,26 +56,29 @@ public class EraserControl : MonoBehaviour
         _playerLifeConrol.SetLifeGauge(Life);
     }
 
+    
     private void Update()
     {
-        if(IsShot && _gameManager.IsPlayerTurn)Shot();
+        if(!IsPause && _gameManager.IsPlayerTurn){
+            if(IsShot)Shot();
 
-        //停止でIsClickをfalse
-        if (_rb.IsSleeping() && !IsShot && _gameManager.IsPlayerTurn)
-        {
-            StartCoroutine("Pause");
+            //停止でIsClickをfalse
+            if (_rb.IsSleeping() && !IsShot)
+            {
+                StartCoroutine("TurnChange");
+            }
+
+            //0.1で速度制限
+            _slider.value = _power * 0.05f;
         }
-
-
-        //0.1で速度制限
-        _slider.value = _power * 0.05f;
     }
 
     private void LateUpdate()
     {
-        Dead();
+        if(!IsPause)Dead();
     }
 
+    //消しピン制御
     void Shot()
     {
         if (Input.GetMouseButton(0))
@@ -101,6 +110,7 @@ public class EraserControl : MonoBehaviour
         }
     }
 
+    //死亡時
     void Dead()
     {
         if(transform.position.y <= DeadArea)
@@ -119,7 +129,8 @@ public class EraserControl : MonoBehaviour
         }
     }
 
-    IEnumerator Pause()
+    //ターン制御
+    IEnumerator TurnChange()
     {
         //Debug.Log("1秒待機");
         //指定秒待機する
@@ -130,6 +141,27 @@ public class EraserControl : MonoBehaviour
         _power = 0.0f;
         _slider.value = 0;
         _gameManager.IsPlayerTurn = false;
-        Debug.Log("player再設定");
+        //Debug.Log("player再設定");
+    }
+
+
+    ///<summary>
+    ///Pause時の制御
+    ///</summary>
+    //ポーズ
+    public void Pause()
+    {
+        IsPause = true;
+        AngularVelocity = _rb.angularVelocity;
+        MyVelocity = _rb.velocity;
+        _rb.Sleep();
+    }
+    //解除
+    public void Resume()
+    {
+        _rb.WakeUp();
+        _rb.angularVelocity = AngularVelocity;
+        _rb.velocity = MyVelocity;
+        IsPause = false;
     }
 }
