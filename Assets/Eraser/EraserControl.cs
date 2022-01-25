@@ -15,6 +15,9 @@ public class EraserControl : MonoBehaviour, IPause
     private float _power;
     private bool IsChange = false;
 
+    [Header("UIï\é¶")]
+    public bool IsUI = true;
+
     [Header("èâä˙à íu")]
     [SerializeField] private Vector3 InitialPos = default;
 
@@ -51,6 +54,7 @@ public class EraserControl : MonoBehaviour, IPause
     {
         _power = 0;
         IsChange = false;
+        IsUI = true;
         _slider.value = 0;
 
         _playerLifeConrol.SetLifeGauge(Life);
@@ -60,7 +64,10 @@ public class EraserControl : MonoBehaviour, IPause
     private void Update()
     {
         if(!IsPause && _gameManager.IsPlayerTurn){
-            if(IsShot)Shot();
+            if(IsShot){
+                IsUI = true;
+                Shot();
+            }
 
             //í‚é~Ç≈IsClickÇfalse
             if (_rb.IsSleeping() && !IsShot)
@@ -106,7 +113,8 @@ public class EraserControl : MonoBehaviour, IPause
             _rb.AddForce(cameraForward * (_power*10), ForceMode.Impulse);
             _rb.AddTorque(Vector3.up * Mathf.PI * (_power*10), ForceMode.Force);
             IsShot = false;
-            //Debug.Log("î≠éÀ");
+            IsUI = false;
+            Debug.Log("î≠éÀ");
         }
     }
 
